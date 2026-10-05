@@ -1,196 +1,26 @@
-# Backend Estudo - Filmes
+# API Filmes FastAPI
 
-## Objetivo
+**Repositório/projeto:** `api-filmes-fastapi`
 
-Este projeto é uma API REST para cadastro, listagem, consulta, atualização e exclusão de filmes. A estrutura foi organizada em camadas para manter separação clara entre rotas, schemas, serviços e acesso ao banco de dados.
+API REST para gerenciamento de filmes. Permite cadastrar, listar, consultar por identificador, atualizar e excluir filmes, com persistência em MongoDB.
 
-## Tecnologias utilizadas
+## Tecnologias
 
-- Python 3.12
+- Python
 - FastAPI
 - Pydantic
 - PyMongo
 - MongoDB
 - Uvicorn
 - pytest
+- HTTPX, utilizado pelo `TestClient` do FastAPI nos testes
 
-## Arquitetura e organização
+As dependências estão listadas em [`app/requisitos/requirements.txt`](app/requisitos/requirements.txt). O projeto não fixa versões nesse arquivo.
 
-A aplicação foi mantida em uma estrutura simples e coerente com a ideia original do projeto:
-
-- [app/main.py](app/main.py): inicialização da aplicação FastAPI e rota raiz.
-- [app/index.html](app/index.html): página HTML simples servida na rota inicial.
-- [app/routes/rotas.py](app/routes/rotas.py): endpoints da API.
-- [app/schemas/schemas.py](app/schemas/schemas.py): modelos de entrada e saída da API.
-- [app/servicos/servicos.py](app/servicos/servicos.py): regras de negócio e conversão de dados.
-- [app/repositories/repositorio.py](app/repositories/repositorio.py): acesso ao banco MongoDB.
-- [app/database/db.py](app/database/db.py): conexão e configuração da base de dados.
-- [tests/test_movies_api.py](tests/test_movies_api.py): testes de integração da API.
-
-## Banco de dados
-
-O projeto foi ajustado para usar MongoDB local com PyMongo. A conexão padrão é:
-
-- URI: mongodb://localhost:27017
-- Banco: cine-movie
-- Coleção: filmes
-
-A estrutura de persistência usa o campo _id do MongoDB (ObjectId) e armazena os filmes no formato:
-
-```json
-{
-  "_id": "<ObjectId>",
-  "titulo": "Matrix"
-}
-```
-
-## Requisitos
-
-As dependências do projeto são listadas em [app/requisitos/requirements.txt](app/requisitos/requirements.txt):
-
-```txt
-fastapi
-uvicorn[standard]
-pydantic
-pymongo
-pytest
-httpx
-```
-
-## Como instalar
-
-### 1. Criar ambiente virtual
-
-```bash
-python -m venv venv
-```
-
-### 2. Ativar ambiente virtual
-
-No Windows PowerShell:
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
-No Windows CMD:
-
-```cmd
-venv\Scripts\activate.bat
-```
-
-No Linux/macOS:
-
-```bash
-source venv/bin/activate
-```
-
-### 3. Instalar dependências
-
-```bash
-pip install -r app/requisitos/requirements.txt
-```
-
-## Como configurar o MongoDB
-
-O projeto assume que o MongoDB está rodando localmente na porta 27017.
-
-Se o MongoDB estiver instalado no sistema, pode ser iniciado com o binário `mongod.exe`:
-
-```powershell
-"C:\Program Files\MongoDB\Server\8.2\bin\mongod.exe" --dbpath "C:\data\db" --logpath "C:\data\logs\mongod.log" --bind_ip 127.0.0.1 --port 27017
-```
-
-> O diretório `C:\data\db` precisa existir.
-
-## Como executar
-
-Na raiz do projeto, com o ambiente virtual ativado:
-
-```bash
-uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-```
-
-Ou diretamente com Python:
-
-```bash
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-```
-
-## Endereço da API
-
-- API: http://127.0.0.1:8000
-- Swagger UI: http://127.0.0.1:8000/docs
-- OpenAPI JSON: http://127.0.0.1:8000/openapi.json
-
-## Endpoints principais
-
-### POST /movie
-Cria um filme.
-
-Exemplo de corpo:
-
-```json
-{
-  "titulo": "Matrix"
-}
-```
-
-### GET /movie
-Lista todos os filmes.
-
-### GET /movie/{movie_id}
-Busca um filme pelo identificador MongoDB.
-
-### PUT /movie/{movie_id}
-Atualiza um filme.
-
-### DELETE /movie/{movie_id}
-Exclui um filme.
-
-### GET /
-Retorna a página HTML simples de status em [app/index.html](app/index.html).
-
-## Exemplos de uso
-
-### Criar filme
-
-```bash
-curl -X POST "http://127.0.0.1:8000/movie" \
-  -H "Content-Type: application/json" \
-  -d '{"titulo":"Matrix"}'
-```
-
-### Listar filmes
-
-```bash
-curl http://127.0.0.1:8000/movie
-```
-
-### Buscar filme por ID
-
-```bash
-curl http://127.0.0.1:8000/movie/<movie_id>
-```
-
-### Atualizar filme
-
-```bash
-curl -X PUT "http://127.0.0.1:8000/movie/<movie_id>" \
-  -H "Content-Type: application/json" \
-  -d '{"titulo":"Matrix Reloaded"}'
-```
-
-### Excluir filme
-
-```bash
-curl -X DELETE "http://127.0.0.1:8000/movie/<movie_id>"
-```
-
-## Estrutura de pastas
+## Estrutura do projeto
 
 ```text
-backend-estudo/
+api-filmes-fastapi/
 ├── app/
 │   ├── database/
 │   │   └── db.py
@@ -205,36 +35,156 @@ backend-estudo/
 │   ├── servicos/
 │   │   └── servicos.py
 │   ├── index.html
-│   ├── main.py
-│   └── __init__.py (se necessário em alguns ambientes)
+│   └── main.py
 ├── tests/
 │   └── test_movies_api.py
 ├── .vscode/
 │   └── settings.json
-├── venv/
-├── README.md
-└── .gitignore
+├── .gitignore
+└── README.md
 ```
 
-## Observações importantes
+O ambiente virtual (`venv/` ou `.venv/`) é criado localmente e ignorado pelo Git; por isso, não faz parte da estrutura versionada do projeto.
 
-- O projeto foi estruturado em camadas, com fluxo completo: rota → schema → serviço → repositório → banco.
-- O MongoDB é a persistência real adotada, e não uma lista em memória.
-- A página HTML em [app/index.html](app/index.html) serve apenas como resposta inicial da rota raiz; o foco principal é a API.
-- O projeto foi validado com testes de CRUD e com resposta do Swagger/OpenAPI.
+## Organização e fluxo
 
-## Validação executada
+```text
+Requisição
+   ↓
+Rotas
+   ↓
+Serviços
+   ↓
+Repositórios
+   ↓
+MongoDB
+```
 
-Os testes do projeto foram executados com sucesso:
+- **Rotas** (`app/routes/rotas.py`): recebem as requisições HTTP, chamam os serviços e definem respostas e códigos HTTP.
+- **Schemas** (`app/schemas/schemas.py`): validam os dados. Um filme recebe `titulo` (texto de 1 a 200 caracteres); a resposta também contém `id`.
+- **Serviços** (`app/servicos/servicos.py`): coordenam as operações, verificam filmes não encontrados e formatam os dados para resposta.
+- **Repositories** (`app/repositories/repositorio.py`): executam as operações de leitura e escrita usando PyMongo e convertem os identificadores para `ObjectId`.
+- **Database** (`app/database/db.py`): cria o cliente MongoDB e seleciona o banco e a coleção.
+- **Testes** (`tests/test_movies_api.py`): verificam a rota raiz e o fluxo de criação, listagem, consulta, atualização e exclusão.
 
-```bash
+## Banco de dados
+
+A aplicação conecta ao MongoDB usando PyMongo com a configuração definida em `app/database/db.py`:
+
+| Configuração   | Valor                       |
+| -------------- | --------------------------- |
+| URI            | `mongodb://localhost:27017` |
+| Banco de dados | `cine-movie`                |
+| Coleção        | `filmes`                    |
+
+Não há variáveis de ambiente para esses valores no código atual. Os documentos guardam o campo `titulo`; o MongoDB gera `_id` como `ObjectId`, que a API devolve como `id` textual. A aplicação também solicita a criação de um índice para `titulo`.
+
+## Instalação e execução local
+
+### 1. Clonar o repositório
+
+Use a URL do repositório remoto:
+
+```powershell
+git clone https://github.com/AndreyODev/api-filmes-fastapi.git
+cd api-filmes-fastapi
+```
+
+Substitua `<URL_DO_REPOSITORIO>` pela URL de clone disponível no GitHub ou no provedor usado pelo projeto.
+
+### 2. Criar e ativar o ambiente virtual
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Se a política de execução do PowerShell impedir a ativação, libere scripts apenas para a sessão atual e tente novamente:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Instalar as dependências
+
+```powershell
+python -m pip install -r app/requisitos/requirements.txt
+```
+
+### 4. Iniciar o MongoDB
+
+Inicie o serviço local do MongoDB instalado na máquina ou execute `mongod` em um terminal. Por exemplo, no PowerShell:
+
+```powershell
+$dbPath = Join-Path $HOME "mongodb-data"
+New-Item -ItemType Directory -Force -Path $dbPath
+mongod --dbpath $dbPath
+```
+
+Esse exemplo usa uma pasta de dados dentro do perfil do usuário; ela é criada se ainda não existir. O comando pressupõe que `mongod` esteja no `PATH`. Caso não esteja, use o caminho do executável correspondente à sua instalação. O caminho de instalação varia entre máquinas. O servidor deve estar acessível em `localhost:27017`, conforme a URI configurada na aplicação.
+
+### 5. Iniciar a API
+
+Com o ambiente virtual ativado, na raiz do repositório:
+
+```powershell
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+```
+
+Esse comando disponibiliza a API em `127.0.0.1:8000`. Host e porta são definidos pelos argumentos do Uvicorn, não fixados no código da aplicação.
+
+## Endereços
+
+- **Aplicação/API:** <http://127.0.0.1:8000>
+- **Swagger UI:** <http://127.0.0.1:8000/docs>
+- **OpenAPI JSON:** <http://127.0.0.1:8000/openapi.json>
+
+A rota `/` serve a página HTML simples de status presente em `app/index.html` e não é incluída no schema OpenAPI.
+
+## Endpoints
+
+Todas as rotas de filmes usam o prefixo `/movie`. O corpo de criação e atualização segue o schema `Movie`:
+
+```json
+{
+  "titulo": "Matrix"
+}
+```
+
+| Método   | Rota                | Finalidade                                                          |
+| -------- | ------------------- | ------------------------------------------------------------------- |
+| `GET`    | `/`                 | Serve a página HTML de status.                                      |
+| `POST`   | `/movie`            | Cria um filme; retorna `201 Created` e o filme com `id` e `titulo`. |
+| `GET`    | `/movie`            | Lista os filmes.                                                    |
+| `GET`    | `/movie/{movie_id}` | Consulta um filme pelo ID do MongoDB.                               |
+| `PUT`    | `/movie/{movie_id}` | Atualiza o título do filme indicado.                                |
+| `DELETE` | `/movie/{movie_id}` | Exclui o filme indicado e retorna uma mensagem de confirmação.      |
+
+Exemplo de criação:
+
+```powershell
+curl.exe -X POST "http://127.0.0.1:8000/movie" `
+  -H "Content-Type: application/json" `
+  -d '{"titulo":"Matrix"}'
+```
+
+Exemplo de atualização:
+
+```powershell
+curl.exe -X PUT "http://127.0.0.1:8000/movie/<ID_DO_FILME>" `
+  -H "Content-Type: application/json" `
+  -d '{"titulo":"Matrix Reloaded"}'
+```
+
+Substitua `<ID_DO_FILME>` pelo `id` retornado pela API. IDs inválidos ou filmes inexistentes resultam em resposta de não encontrado nas rotas de consulta, atualização e exclusão.
+
+## Testes
+
+Com as dependências instaladas e o MongoDB disponível na URI configurada, execute na raiz do projeto:
+
+```powershell
 python -m pytest -q tests/test_movies_api.py
 ```
 
-Resultado esperado:
-
-```text
-2 passed, 1 warning in 25.94s
-```
-
-A advertência é de depreciação do TestClient do Starlette com o httpx, mas não impede o funcionamento da API.
+O arquivo [`tests/test_movies_api.py`](tests/test_movies_api.py) verifica que a rota raiz responde com sucesso e exercita o fluxo CRUD (criar, listar, consultar, atualizar e excluir um filme) pela API. Este README não fixa um resultado de execução; a saída depende da execução local dos testes.
